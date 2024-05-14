@@ -32,7 +32,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-COCOA_EXTENSIONS_INLINE NSRange NSEmptyRange()
+COCOA_EXTENSIONS_INLINE NSRange NSEmptyRange(void)
 {
 	return NSMakeRange(NSNotFound, 0);
 }
