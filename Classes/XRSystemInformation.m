@@ -40,7 +40,7 @@
 /* Private IOKit function */
 typedef uint32_t IOPMCapabilityBits;
 
-static NSUInteger _highestRecognizedMajorOSVersion = 13; // macOS Monterey
+static NSUInteger _highestRecognizedMajorOSVersion = 14; // macOS Sonoma
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -172,7 +172,9 @@ NS_ASSUME_NONNULL_BEGIN
 	if (cachedValue == nil) {
 		if (XRRunningOnUnrecognizedOSVersion()) {
 			cachedValue = NSLocalizedStringFromTable(@"macOS", @"XRSystemInformation", nil);
-		} else if (XRRunningOnOSXVenturaOrLater()) {
+		} else if (XRRunningOnOSXSonomaOrLater()) {
+			cachedValue = NSLocalizedStringFromTable(@"macOS Sonoma", @"XRSystemInformation", nil);
+ 		} else if (XRRunningOnOSXVenturaOrLater()) {
 			cachedValue = NSLocalizedStringFromTable(@"macOS Ventura", @"XRSystemInformation", nil);
 		} else if (XRRunningOnOSXMontereyOrLater()) {
 			cachedValue = NSLocalizedStringFromTable(@"macOS Monterey", @"XRSystemInformation", nil);
@@ -609,6 +611,27 @@ BOOL XRRunningOnOSXVenturaOrLater(void)
 			NSOperatingSystemVersion compareVersion;
 
 			compareVersion.majorVersion = 13;
+			compareVersion.minorVersion = 0;
+			compareVersion.patchVersion = 0;
+
+			cachedValue = [[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:compareVersion];
+		}
+	});
+
+	return cachedValue;
+}
+
+BOOL XRRunningOnOSXSonomaOrLater(void)
+{
+	static BOOL cachedValue = NO;
+
+	static dispatch_once_t onceToken;
+
+	dispatch_once(&onceToken, ^{
+		if ([[NSProcessInfo processInfo] respondsToSelector:@selector(isOperatingSystemAtLeastVersion:)]) {
+			NSOperatingSystemVersion compareVersion;
+
+			compareVersion.majorVersion = 14;
 			compareVersion.minorVersion = 0;
 			compareVersion.patchVersion = 0;
 
